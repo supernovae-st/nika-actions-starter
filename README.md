@@ -98,5 +98,9 @@ in the step summary instead of a comment. Execution is not this action's job.
 ```
 
 <p align="center">
+  <sub>⭐ If this saved you time, a star helps other people find it.</sub>
+</p>
+
+<p align="center">
   <sub>Docs: <a href="https://docs.nika.sh">docs.nika.sh</a> · The action: <a href="https://github.com/supernovae-st/nika-action">nika-action</a> · Engine (AGPL-3.0): <a href="https://github.com/supernovae-st/nika">nika</a></sub>
 </p>
