@@ -35,6 +35,12 @@ The `comment` node only fires `when` the risk comes back high. In CI this file
 is **checked, not run**, so the sticky comment shows this shape and its honest
 cost floor before anything happens.
 
+And live from your terminal (`nika check`, then `nika graph`):
+
+<p align="center">
+  <img src="media/check-and-graph.gif" alt="nika check returns a clean verdict with the honest cost floor, then nika graph draws the DAG in the terminal" width="900">
+</p>
+
 ## Use it
 
 1. Click **Use this template** (top right).
