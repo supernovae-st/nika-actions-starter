@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://nika.sh/spec/v1/workflow.schema.json
+#
+# pr-risk-review: read a PR diff, judge its risk, comment only when it's high.
+#
+# In CI this file is CHECKED, not run: the sticky PR comment shows what it
+# WOULD do (the plan, the honest cost floor, which secrets it wants, the
+# DAG) before a single token is ever spent. That is the receipt.
+#
+# To run it yourself (locally or in a job you own):
+#   nika check flows/pr-risk-review.nika.yaml
+#   nika run   flows/pr-risk-review.nika.yaml
+nika: v1
+workflow: pr-risk-review
+description: "git diff -> structured risk judgment -> a comment gated on high risk"
+
+model: ollama/qwen3.5:9b        # local by default; swap to any provider in one line
+
+
+# The tightest boundary the checker can pin (default-deny once present):
+# exec may only launch git, and the only tool this flow may reach is the
+# PR-comment MCP. Anything else is refused, before it runs.
+permits:
+  exec: ["git"]
+  tools: ["mcp:github/pr-comment"]
+
+tasks:
+  - id: diff
+    exec:
+      command: ["git", "diff", "origin/main...HEAD"]
+      capture: structured
+
+  - id: assess
+    depends_on: [diff]
+    with:
+      patch: ${{ tasks.diff.output.stdout }}
+    infer:
+      prompt: |
+        Risk-assess this diff for secrets, breaking changes and missing
+        tests. Be terse.
+        ${{ with.patch }}
+      max_tokens: 400
+      schema:
+        type: object
+        additionalProperties: false
+        required: [risk, reasons]
+        properties:
+          risk: { type: string, enum: [low, medium, high] }
+          reasons: { type: array, items: { type: string } }
+
+  - id: comment
+    depends_on: [assess]
+    when: ${{ tasks.assess.output.risk == 'high' }}
+    invoke:
+      tool: "mcp:github/pr-comment"
+      args:
+        body: |
+          Nika flagged this PR as **high risk**:
+          ${{ tasks.assess.output.reasons }}
+
+outputs:
+  risk:
+    value: ${{ tasks.assess.output.risk }}
+    type: string
+    description: "low | medium | high"
