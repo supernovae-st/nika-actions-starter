@@ -1,0 +1,44 @@
+# Reusable: add a nika check to any repo in one line.
+#
+# In your own repo:
+#
+#   jobs:
+#     nika:
+#       permissions:
+#         contents: read
+#         pull-requests: write
+#       uses: supernovae-st/nika-actions-starter/.github/workflows/nika-check.yml@main
+#       with:
+#         workflow: path/to/your.nika.yaml
+#
+# check-only, zero-secret, fork-safe. Execution is not this workflow's job.
+name: nika check (reusable)
+on:
+  workflow_call:
+    inputs:
+      workflow:
+        description: 'Path to the .nika.yaml workflow file to check'
+        required: true
+        type: string
+      mode:
+        description: 'check (default) or test (offline mock golden lane)'
+        required: false
+        type: string
+        default: check
+      engine-version:
+        description: 'nika release to install'
+        required: false
+        type: string
+        default: '0.99.0'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supernovae-st/nika-action@v1
+        with:
+          workflow: ${{ inputs.workflow }}
+          mode: ${{ inputs.mode }}
+          engine-version: ${{ inputs.engine-version }}
+          comment: 'true'
