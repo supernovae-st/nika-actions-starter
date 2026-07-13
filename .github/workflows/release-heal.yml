@@ -1,0 +1,36 @@
+name: release-heal
+
+# New clones must start on the current wave (done by hand twice on
+# 2026-07-13). Daily: bump the template's engine-version default to the
+# latest published release. SECURITY: no github.event data in the shell.
+
+on:
+  schedule:
+    - cron: '31 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: The template default follows the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="$(gh release view --repo supernovae-st/nika --json tagName --jq .tagName)"
+          [[ "$tag" =~ ^v[0-9][0-9.]*$ ]] || { echo "::error::unexpected tag: $tag"; exit 1; }
+          ver="${tag#v}"
+          f=.github/workflows/nika-check.yml
+          cur="$(sed -n "s/.*default: '\([0-9][0-9.]*\)'.*/\1/p" $f | head -1)"
+          if [ "$cur" = "$ver" ]; then echo "default already $ver — nothing to heal"; exit 0; fi
+          perl -pi -e "s/default: '[0-9][0-9.]*'/default: '${ver}'/" $f
+          git config user.name "nika-release[bot]"
+          git config user.email "nika@supernovae.studio"
+          git add $f && git commit -m "chore: the starter installs ${ver} by default (release-heal)" && git push
+          echo "healed to ${ver}"
