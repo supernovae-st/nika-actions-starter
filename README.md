@@ -107,5 +107,5 @@ in the step summary instead of a comment. Execution is not this action's job.
 
 ---
 
-Nika is independent open source — if this template earns its keep, a ⭐ on
+Nika is independent open source · if this template earns its keep, a ⭐ on
 [the engine](https://github.com/supernovae-st/nika) is how the next person finds it.
