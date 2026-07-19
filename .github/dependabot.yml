@@ -1,0 +1,18 @@
+# Keep this starter's own CI action pins fresh in one grouped weekly PR.
+# (The first-party nika-action stays on its @v1 tag by design and is not
+# bumped here — see the workflow comment.)
+#
+# Grouped on purpose: a split-pair action (codeql-action/init +
+# codeql-action/analyze must move in lockstep) landing as two separate
+# PRs drifts out of sync between merges. One grouped PR moves every pin
+# atomically (lesson: nika-spec 2026-07-19).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
