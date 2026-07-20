@@ -10,8 +10,9 @@
 #   nika check flows/pr-risk-review.nika.yaml
 #   nika run   flows/pr-risk-review.nika.yaml
 nika: v1
-workflow: pr-risk-review
-description: "git diff -> structured risk judgment -> a comment gated on high risk"
+workflow:
+  id: pr-risk-review
+  description: "git diff -> structured risk judgment -> a comment gated on high risk"
 
 model: ollama/qwen3.5:9b        # local by default; swap to any provider in one line
 
@@ -24,13 +25,12 @@ permits:
   tools: ["mcp:github/pr-comment"]
 
 tasks:
-  - id: diff
+  diff:
     exec:
       command: ["git", "diff", "origin/main...HEAD"]
       capture: structured
 
-  - id: assess
-    depends_on: [diff]
+  assess:
     with:
       patch: ${{ tasks.diff.output.stdout }}
     infer:
@@ -47,15 +47,17 @@ tasks:
           risk: { type: string, enum: [low, medium, high] }
           reasons: { type: array, items: { type: string } }
 
-  - id: comment
-    depends_on: [assess]
-    when: ${{ tasks.assess.output.risk == 'high' }}
+  comment:
+    with:
+      assess_risk: ${{ tasks.assess.output.risk }}
+      assess_reasons: ${{ tasks.assess.output.reasons }}
+    when: ${{ with.assess_risk == 'high' }}
     invoke:
       tool: "mcp:github/pr-comment"
       args:
         body: |
           Nika flagged this PR as **high risk**:
-          ${{ tasks.assess.output.reasons }}
+          ${{ with.assess_reasons }}
 
 outputs:
   risk:
