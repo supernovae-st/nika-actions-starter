@@ -29,7 +29,7 @@ on:
         description: 'nika release to install'
         required: false
         type: string
-        default: '0.104.0'
+        default: '0.105.0'
 
 jobs:
   check:
