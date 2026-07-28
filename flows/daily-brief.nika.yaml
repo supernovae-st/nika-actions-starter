@@ -16,7 +16,7 @@ workflow:
 
 model: ollama/llama3.2:3b        # local by default, swap for any provider
 
-vars:
+const:
   feed_url: "https://news.ycombinator.com/rss"
   out_path: "./brief.md"
 
@@ -25,7 +25,7 @@ tasks:
     invoke:
       tool: "nika:fetch"
       args:
-        url: "${{ vars.feed_url }}"
+        url: "${{ const.feed_url }}"
         mode: feed
 
   top_stories:
@@ -59,12 +59,12 @@ tasks:
     invoke:
       tool: "nika:write"
       args:
-        path: "${{ vars.out_path }}"
+        path: "${{ const.out_path }}"
         content: "${{ with.brief }}"
         overwrite: true
 
 outputs:
   stories:
     value: ${{ tasks.top_stories.output }}
-    type: array
+    type: { array: { object: { title: string, url: string } } }
     description: "the stories the brief covers (title + url)"
