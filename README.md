@@ -1,9 +1,10 @@
 <h1 align="center">nika-actions-starter</h1>
 
-<p align="center"><strong>AI-workflow receipts in your CI.</strong><br>
-Every pull request gets a static verdict, posted as a sticky comment: what each
-workflow would do, an honest cost floor, which secrets it wants, the DAG.
-Checked before a single token is spent. Nothing is executed.</p>
+<p align="center"><strong>Repeatable AI jobs as files, with receipts.</strong><br>
+The one template: proven workflows, editor and agent wiring, and CI that gives
+every pull request a static verdict as a sticky comment. What each workflow
+would do, an honest cost floor, which secrets it wants, the DAG. Checked before
+a single token is spent. Works the same on your machine and on a runner.</p>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/static-check-fix.optimized.gif" alt="nika check catches a broken DAG with a named finding and a three-line fix, then a clean verdict, before any token is spent" width="820">
@@ -61,13 +62,37 @@ jobs:
       workflow: path/to/your.nika.yaml
 ```
 
-Prove it locally too (single binary):
+## Run it on your machine too
+
+The same repo is the local starting point. Nothing here is CI-only.
 
 ```bash
-brew install supernovae-st/tap/nika
-nika check flows/pr-risk-review.nika.yaml
-nika graph flows/pr-risk-review.nika.yaml   # the diagram above, from your terminal
+brew install supernovae-st/tap/nika          # single binary, no runtime
+
+nika check flows/daily-brief.nika.yaml       # the audit before the run
+nika run   flows/daily-brief.nika.yaml --model mock/echo   # offline, zero keys
+nika graph flows/pr-risk-review.nika.yaml    # the diagram above, in your terminal
 ```
+
+Got [Ollama](https://ollama.com)? Drop the `--model` flag and the same file runs
+against a real local model:
+
+```bash
+nika run flows/daily-brief.nika.yaml
+```
+
+You get `brief.md` (the top Hacker News stories, briefed locally) and a
+hash-chained trace in `.nika/traces/`. The receipt is checkable:
+
+```bash
+nika trace verify    # exits 0, or names the first broken link
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/full-loop.optimized.gif" alt="The whole loop against the real binary: nika check catches two typos with did-you-mean fixes, the renames applied, the audit passes, the run executes offline, and nika trace verify confirms the printed chain head" width="820">
+</p>
+
+<p align="center"><em>check catches it · the fix is named · the run is live · the trace is the receipt</em></p>
 
 ## What is inside
 
@@ -109,3 +134,35 @@ in the step summary instead of a comment. Execution is not this action's job.
 
 Nika is independent open source · if this template earns its keep, a ⭐ on
 [the engine](https://github.com/supernovae-st/nika) is how the next person finds it.
+
+<!-- city:map -->
+## The city · where this repo sits
+
+```
+📜 nika-spec ──── the civil code · the law tables, the corpus, the exam
+    │ sync-pack: byte-gated mirror        │ projectors: drift-gated
+    ▼                                     ▼
+⚙️ nika ───────── the engine + the catalog (the yellow pages)
+    │ the release train                  🖥️ nika.sh · 📖 nika-docs
+    ▼                                     the showroom · the manual
+📦 homebrew-tap · npm · Docker ── the docks
+🔌 nika-client · 🎨 nika-vscode · 🤖 nika-agents · ⚡ gh-nika ── the doors
+🏭 nika-action · 🧪 nika-actions-starter ── the CI district   ◀── you are here
+🏪 nika-registry ── the market · 🏛 nika-estate ── the land registry
+```
+
+**This building** · THE TEMPLATE · a repository that already works: proven workflows, editor wiring, and CI receipts from the first push.
+
+**Root** · neither · every file here is a copy meant to be edited by whoever clones it. It teaches the LANGUAGE by example and defers to the spec for the law · nothing authoritative is typed here.
+
+**Consumes** · the engine (via brew locally, via the Action in CI) · the spec's grammar · the agent wiring from nika-agents.
+
+**Serves** · anyone starting from zero, on their machine or on a runner.
+
+**Truth lives** · the workflows in `flows/` are checked by the same command your repository will run · if this template drifts from the released grammar, its own CI goes red before yours does.
+
+All the buildings: [nika-spec](https://github.com/supernovae-st/nika-spec) · [nika](https://github.com/supernovae-st/nika) · [nika.sh](https://github.com/supernovae-st/nika.sh) · [nika-docs](https://github.com/supernovae-st/nika-docs) · [nika-client](https://github.com/supernovae-st/nika-client) · [nika-vscode](https://github.com/supernovae-st/nika-vscode) · [nika-agents](https://github.com/supernovae-st/nika-agents) · [gh-nika](https://github.com/supernovae-st/gh-nika) · [homebrew-tap](https://github.com/supernovae-st/homebrew-tap) · [nika-action](https://github.com/supernovae-st/nika-action) · [nika-actions-starter](https://github.com/supernovae-st/nika-actions-starter) · [nika-registry](https://github.com/supernovae-st/nika-registry) · [nika-estate](https://github.com/supernovae-st/nika-estate)
+
+Every fact has one home · everything else is a gated projection.
+The living map: [nika.sh/map](https://nika.sh/map).
+<!-- /city:map -->
