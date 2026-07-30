@@ -15,17 +15,29 @@ oracle; the human runs it.
    `nika examples list` · `nika examples show <slug>` ·
    `nika new --from <template> <file>.nika.yaml`
 2. **Write the file.** Envelope is always `nika: v1` +
-   `workflow: <kebab-id>` + `tasks:`.
+   `workflow: <kebab-id>` + `tasks:`. Pick models and builtins from
+   the embedded catalogs — `nika catalog` (providers · models ·
+   capabilities · which env var each needs) and `nika catalog --tools` (the
+   `nika:*` builtins an `invoke` reaches without MCP); before a run,
+   `nika inspect <file>` shows the anatomy: tasks · waves · the cost
+   floor.
 3. **Check it**: `nika check <file>` (exit 0 = clean · 2 = findings),
    then `nika check --native-strict <file>` — it fails on any
    `native-first` hint (an `exec:` a builtin covers).
-4. **Repair from the diagnostics** — they name the exact task, reference
-   and fix. Unknown code? `nika explain NIKA-XXXX`.
+4. **Repair**: `nika check <file> --fix` applies the machine-applicable
+   renames first (typo'd fields · tools · args · `after:` targets ·
+   `${{ }}` references — typed did-you-mean only, ambiguity is skipped
+   with a note, never guessed) and re-audits; repair what remains from
+   the diagnostics — they name the exact task, reference and fix.
+   Unknown code? `nika explain NIKA-XXXX`.
 5. Repeat 3–4 until clean. **Never hand a file to the human that does
    not pass `nika check`** — and pass `--native-strict` too, unless
    every remaining `exec:` is in the exec ledger (below).
 6. The human (or CI) runs it: `nika run <file>`. Preview offline with
-   `--model mock/echo`; run locally with `--model ollama/<model>`.
+   `--model mock/echo`; run locally with `--model ollama/<model>` —
+   or fully in-binary: `nika model pull <owner/repo-GGUF>` then
+   `nika model serve --model <id>` (qwen3-family GGUFs today; the
+   serve banner prints the exact env + `model:` line workflows use).
    Inputs ride `--var key=value` (repeatable · unknown keys refused);
    a run paused on a `nika:prompt` resumes with
    `nika run <file> --resume <trace> --answer <task>=<value>`
@@ -67,7 +79,7 @@ oracle; the human runs it.
 The order is `invoke: nika:*` → `invoke: mcp:<server>/<tool>` →
 `exec:`. Before writing ANY `exec:`, answer in your head:
 
-1. **Which builtin replaces it?** `nika tools --json` is the catalog.
+1. **Which builtin replaces it?** `nika catalog --tools --json` is the catalog.
    HTTP (curl/wget/helper fetch) → `nika:fetch` · uploads →
    `multipart:` · site crawls → `traverse:` · file plumbing
    (cat/tee/cp/mkdir) → `nika:read`/`nika:write` (`create_dirs: true`) ·
@@ -100,10 +112,20 @@ Every surviving `exec:` gets a row in the workflow's header comment:
 
 ## Discipline
 
-- References: `${{ tasks.<id>.output }}` · `${{ vars.x }}` ·
-  `${{ env.KEY }}` · `${{ secrets.X }}` (never inline a credential).
-- A task that reads another task's output MUST declare it in
-  `depends_on: [<id>]`.
+- References: `${{ tasks.<id>.output }}` · `${{ const.x }}` (a fixed
+  value) · `${{ inputs.x }}` (a typed parameter, set with `--var
+  key=value`) · `${{ env.KEY }}` · `${{ secrets.X }}` (never inline a
+  credential). `vars:` is a DEAD envelope field: the engine refuses it
+  with NIKA-VALUES-001 and `nika check --fix` migrates it.
+- In `outputs:` bind `${{ tasks.<id>.output }}` — never the bare
+  `${{ tasks.<id> }}`: that binds the ENVELOPE (status + timestamps),
+  so `nika test` goldens drift red on every run. `nika check` teaches
+  this as `[envelope-output]`; fix the binding, never re-baseline
+  around it.
+- A task that reads another task's output binds it in `with:` —
+  `with: { alias: "${{ tasks.<id>.output }}" }` — and the body reads
+  `${{ with.alias }}` (the binding IS the edge; `tasks.*` anywhere
+  else is NIKA-VAR-021). Pure ordering is `after: { <id>: succeeded }`.
 - Models are `provider/name` (`ollama/llama3.2:3b` local-first ·
   `mock/echo` offline preview).
 - Timeouts are quoted Go-durations (`timeout: "7m"`) — give local

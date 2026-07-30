@@ -16,16 +16,25 @@ workflow:
 
 model: ollama/llama3.2:3b        # local by default, swap for any provider
 
-vars:
+const:
   feed_url: "https://news.ycombinator.com/rss"
   out_path: "./brief.md"
+
+# The blast radius, declared in the file. This flow may reach exactly two
+# tools, fetch one host and write one path. Anything else is refused before
+# a request leaves your machine, not after.
+permits:
+  tools: ["nika:fetch", "nika:jq", "nika:write"]   # the only tools it may invoke
+  net:   { http: ["news.ycombinator.com"] }        # one host · every other is denied
+  fs:    { write: ["./brief.md"] }                 # writes one file · reads nothing
+  exec:  false                                     # this workflow runs zero shells
 
 tasks:
   fetch_feed:
     invoke:
       tool: "nika:fetch"
       args:
-        url: "${{ vars.feed_url }}"
+        url: "${{ const.feed_url }}"
         mode: feed
 
   top_stories:
@@ -59,12 +68,14 @@ tasks:
     invoke:
       tool: "nika:write"
       args:
-        path: "${{ vars.out_path }}"
+        path: "${{ const.out_path }}"
         content: "${{ with.brief }}"
         overwrite: true
 
 outputs:
   stories:
     value: ${{ tasks.top_stories.output }}
-    type: array
+    # `array` alone is not a type: the primitives are lowercase and the
+    # compound forms are mappings. The jq step emits exactly {title, url}.
+    type: { array: { object: { title: string, url: string } } }
     description: "the stories the brief covers (title + url)"
