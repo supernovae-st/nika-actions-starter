@@ -7,7 +7,7 @@ would do, an honest cost floor, which secrets it wants, the DAG. Checked before
 a single token is spent. Works the same on your machine and on a runner.</p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/static-check-fix.optimized.gif" alt="nika check catches a broken DAG with a named finding and a three-line fix, then a clean verdict, before any token is spent" width="820">
+  <img src="https://raw.githubusercontent.com/supernovae-st/nika/v0.107.0/media/gifs/static-check-fix.optimized.gif" alt="nika check catches a broken DAG with a named finding and a three-line fix, then a clean verdict, before any token is spent" width="820">
 </p>
 
 ## See it live
@@ -89,7 +89,7 @@ nika trace verify    # exits 0, or names the first broken link
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/full-loop.optimized.gif" alt="The whole loop against the real binary: nika check catches two typos with did-you-mean fixes, the renames applied, the audit passes, the run executes offline, and nika trace verify confirms the printed chain head" width="820">
+  <img src="https://raw.githubusercontent.com/supernovae-st/nika/v0.107.0/media/gifs/full-loop.optimized.gif" alt="The whole loop against the real binary: nika check catches two typos with did-you-mean fixes, the renames applied, the audit passes, the run executes offline, and nika trace verify confirms the printed chain head" width="820">
 </p>
 
 <p align="center"><em>check catches it · the fix is named · the run is live · the trace is the receipt</em></p>
