@@ -146,7 +146,7 @@ Nika is independent open source · if this template earns its keep, a ⭐ on
     │ the release train                  🖥️ nika.sh · 📖 nika-docs
     ▼                                     the showroom · the manual
 📦 homebrew-tap · npm · Docker ── the docks
-🔌 nika-client · 🎨 nika-vscode · 🤖 nika-agents · ⚡ gh-nika ── the doors
+🔌 nika-client · 🎨 nika-vscode · 🤖 nika-plugins · ⚡ gh-nika ── the doors
 🏭 nika-action · 🧪 nika-actions-starter ── the CI district   ◀── you are here
 🏪 nika-registry ── the market · 🏛 nika-estate ── the land registry
 ```
@@ -155,13 +155,13 @@ Nika is independent open source · if this template earns its keep, a ⭐ on
 
 **Root** · neither · every file here is a copy meant to be edited by whoever clones it. It teaches the LANGUAGE by example and defers to the spec for the law · nothing authoritative is typed here.
 
-**Consumes** · the engine (via brew locally, via the Action in CI) · the spec's grammar · the agent wiring from nika-agents.
+**Consumes** · the engine (via brew locally, via the Action in CI) · the spec's grammar · the agent wiring from nika-plugins.
 
 **Serves** · anyone starting from zero, on their machine or on a runner.
 
 **Truth lives** · the workflows in `flows/` are checked by the same command your repository will run · if this template drifts from the released grammar, its own CI goes red before yours does.
 
-All the buildings: [nika-spec](https://github.com/supernovae-st/nika-spec) · [nika](https://github.com/supernovae-st/nika) · [nika.sh](https://github.com/supernovae-st/nika.sh) · [nika-docs](https://github.com/supernovae-st/nika-docs) · [nika-client](https://github.com/supernovae-st/nika-client) · [nika-vscode](https://github.com/supernovae-st/nika-vscode) · [nika-agents](https://github.com/supernovae-st/nika-agents) · [gh-nika](https://github.com/supernovae-st/gh-nika) · [homebrew-tap](https://github.com/supernovae-st/homebrew-tap) · [nika-action](https://github.com/supernovae-st/nika-action) · [nika-actions-starter](https://github.com/supernovae-st/nika-actions-starter) · [nika-registry](https://github.com/supernovae-st/nika-registry) · [nika-estate](https://github.com/supernovae-st/nika-estate)
+All the buildings: [nika-spec](https://github.com/supernovae-st/nika-spec) · [nika](https://github.com/supernovae-st/nika) · [nika.sh](https://github.com/supernovae-st/nika.sh) · [nika-docs](https://github.com/supernovae-st/nika-docs) · [nika-client](https://github.com/supernovae-st/nika-client) · [nika-vscode](https://github.com/supernovae-st/nika-vscode) · [nika-plugins](https://github.com/supernovae-st/nika-plugins) · [gh-nika](https://github.com/supernovae-st/gh-nika) · [homebrew-tap](https://github.com/supernovae-st/homebrew-tap) · [nika-action](https://github.com/supernovae-st/nika-action) · [nika-actions-starter](https://github.com/supernovae-st/nika-actions-starter) · [nika-registry](https://github.com/supernovae-st/nika-registry) · [nika-estate](https://github.com/supernovae-st/nika-estate)
 
 Every fact has one home · everything else is a gated projection.
 The living map: [nika.sh/map](https://nika.sh/map).
