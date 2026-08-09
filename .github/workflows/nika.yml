@@ -27,7 +27,7 @@ jobs:
           - flows/daily-brief.nika.yaml
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: supernovae-st/nika-action@v1.0.9  # first-party · tracks the action's release tag by design
+      - uses: supernovae-st/nika-action@v1.0.11  # first-party · tracks the action's release tag by design
         with:
           workflow: ${{ matrix.flow }}
           mode: check
