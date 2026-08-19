@@ -32,3 +32,4 @@ jobs:
           workflow: ${{ matrix.flow }}
           mode: check
           comment: 'true'
+          engine-version: '0.109.2'

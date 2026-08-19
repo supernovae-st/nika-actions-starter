@@ -6,9 +6,9 @@ EVERY edit → repair from the diagnostics (`nika explain NIKA-XXXX`) →
 only a clean file reaches a human.
 
 Rules the validator enforces:
-- Envelope `nika: v1` · one verb per task (`infer` · `exec` · `invoke` ·
-  `agent`) · the verb IS the task key.
-- Any `${{ tasks.X }}` reference needs `depends_on: [X]`.
+- Envelope `nika: <kebab-id>` · one verb per task (`infer` · `exec` ·
+  `invoke` · `agent`) · the verb IS the task key.
+- A task that reads another binds it in `with:` (the binding IS the edge).
 - `invoke` arguments live under `args:` · secrets come from the
   environment (`${{ secrets.X }}`) — never inline.
 - Never invent syntax: `nika schema` is the JSON Schema · `nika catalog`
