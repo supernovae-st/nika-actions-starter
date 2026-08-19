@@ -9,10 +9,9 @@
 # To run it yourself (locally or in a job you own):
 #   nika check flows/pr-risk-review.nika.yaml
 #   nika run   flows/pr-risk-review.nika.yaml
-nika: v1
-workflow:
-  id: pr-risk-review
-  description: "git diff -> structured risk judgment -> a comment gated on high risk"
+#
+# git diff → structured risk judgment → a comment gated on high risk
+nika: pr-risk-review
 
 model: ollama/qwen3.5:9b        # local by default; swap to any provider in one line
 

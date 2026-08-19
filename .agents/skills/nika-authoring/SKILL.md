@@ -14,8 +14,8 @@ oracle; the human runs it.
 1. **Start from a template or example**, never from scratch:
    `nika examples list` · `nika examples show <slug>` ·
    `nika new --from <template> <file>.nika.yaml`
-2. **Write the file.** Envelope is always `nika: v1` +
-   `workflow: <kebab-id>` + `tasks:`. Pick models and builtins from
+2. **Write the file.** Envelope is always `nika: <kebab-id>` +
+   `tasks:` (nine keys, closed). Pick models and builtins from
    the embedded catalogs — `nika catalog` (providers · models ·
    capabilities · which env var each needs) and `nika catalog --tools` (the
    `nika:*` builtins an `invoke` reaches without MCP); before a run,

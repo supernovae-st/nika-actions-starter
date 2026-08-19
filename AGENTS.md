@@ -5,7 +5,7 @@ Nika is a sovereign AI workflow engine. Workflows are `*.nika.yaml` files,
 
 ## The loop
 - **Author** · `nika new --from <template> <file>.nika.yaml` (or write one —
-  the envelope is `nika: v1` + `workflow: <kebab-id>` + `tasks:`).
+  the envelope is `nika: <kebab-id>` + `tasks:`).
 - **Check** · `nika check <file>` — the static audit BEFORE any run (schema ·
   DAG · CEL · effects · permits · cost). Exit `0` clean · `2` findings.
 - **Run** · `nika run <file>` — execute · live render. Exit `0` ok · `1` failed.
@@ -33,14 +33,14 @@ or MCP tool) · `agent` (a multi-turn ReAct loop).
 
 ## Hard rules (the validator enforces these — they catch ~90% of LLM errors)
 - One verb per task · the verb IS the task key (never a `verb:` field).
-- Any `${{ tasks.X }}` reference needs `depends_on: [X]` (arrays always).
+- A task that reads another binds it in `with:` (the binding IS the edge).
 - Quote any YAML scalar that STARTS with `${{` (an unquoted leading `${{`
   breaks the parse).
 - `invoke` arguments live under `args:` (not `input:` / `params:`).
 - `when:` is a `${{ }}` CEL boolean or the literal `true`/`false` — a bare
   string is rejected. `size()` is the only CEL function.
 - `nika:write` needs `content:` · `nika:done` is valid only inside `agent.tools`.
-- snake_case task ids · kebab-case `workflow:`.
+- snake_case task ids · kebab-case `nika:` identity.
 
 ## Don't invent structure — route to a skeleton
 `nika new --from '?'` lists the embedded skeletons · `nika examples list` /
