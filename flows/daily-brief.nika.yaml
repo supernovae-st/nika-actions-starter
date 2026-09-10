@@ -78,3 +78,5 @@ outputs:
     # compound forms are mappings. The jq step emits exactly {title, url}.
     type: { array: { object: { title: string, url: string } } }
     description: "the stories the brief covers (title + url)"
+
+# (demo PR: watch the Nika check verdict appear below)
