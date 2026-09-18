@@ -62,7 +62,7 @@ Copy, fill, check.
 
 ## Understand · replay · prove
 - `nika inspect <file>` — static anatomy: tasks · verbs · wave groups · cost.
-- `nika graph <file> --format mermaid|dot|json` — the ONE graph projector.
+- `nika inspect <file>` renders the dependency plan and permits boundary.
 - `nika trace show|replay <run>` — the flight recorder (every run records).
 - `nika trace verify <run>` — the journal is hash-chained: verify it after a
   run that matters, cite the trace instead of trusting a memory of the run.

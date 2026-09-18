@@ -8,7 +8,7 @@
 #
 # To run it yourself (locally or in a job you own):
 #   nika check flows/pr-risk-review.nika
-#   nika run   flows/pr-risk-review.nika
+#   nika run   flows/pr-risk-review.nika --var repository=OWNER/REPO --var pull_request=123
 #
 # git diff → structured risk judgment → a comment gated on high risk
 nika: pr-risk-review
@@ -16,12 +16,20 @@ nika: pr-risk-review
 model: ollama/qwen3.5:9b        # local by default; swap to any provider in one line
 
 
-# The tightest boundary the checker can pin (default-deny once present):
-# exec may only launch git, and the only tool this flow may reach is the
-# PR-comment MCP. Anything else is refused, before it runs.
+inputs:
+  repository:
+    type: string
+    required: true
+    description: GitHub OWNER/REPO to receive the comment
+  pull_request:
+    type: string
+    required: true
+    description: Pull request number in that repository
+
+# Explicit argv keeps model text out of a shell. A real run needs gh
+# authenticated for the caller-selected repository; static checks need no token.
 permits:
-  exec: ["git"]
-  tools: ["mcp:github/pr-comment"]
+  exec: ["git", "gh"]
 
 tasks:
   diff:
@@ -51,10 +59,16 @@ tasks:
       assess_risk: ${{ tasks.assess.output.risk }}
       assess_reasons: ${{ tasks.assess.output.reasons }}
     when: ${{ with.assess_risk == 'high' }}
-    invoke:
-      tool: "mcp:github/pr-comment"
-      args:
-        body: |
+    exec:
+      command:
+        - gh
+        - pr
+        - comment
+        - "${{ inputs.pull_request }}"
+        - --repo
+        - "${{ inputs.repository }}"
+        - --body
+        - |
           Nika flagged this PR as **high risk**:
           ${{ with.assess_reasons }}
 
