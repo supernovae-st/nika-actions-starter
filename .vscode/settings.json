@@ -1,8 +1,8 @@
 {
   "yaml.schemas": {
-    "https://nika.sh/spec/v1/workflow.schema.json": "*.nika.yaml"
+    "https://nika.sh/spec/v1/workflow.schema.json": "*.nika"
   },
   "files.associations": {
-    "*.nika.yaml": "yaml"
+    "*.nika": "yaml"
   }
 }

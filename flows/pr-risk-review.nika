@@ -7,8 +7,8 @@
 # DAG) before a single token is ever spent. That is the receipt.
 #
 # To run it yourself (locally or in a job you own):
-#   nika check flows/pr-risk-review.nika.yaml
-#   nika run   flows/pr-risk-review.nika.yaml
+#   nika check flows/pr-risk-review.nika
+#   nika run   flows/pr-risk-review.nika
 #
 # git diff → structured risk judgment → a comment gated on high risk
 nika: pr-risk-review

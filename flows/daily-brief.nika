@@ -6,9 +6,9 @@
 # trace (`nika trace verify`), and `nika check` audits the whole plan
 # BEFORE a single token is spent.
 #
-#   nika check flows/daily-brief.nika.yaml            # static audit (offline)
-#   nika run  flows/daily-brief.nika.yaml             # real local run (Ollama)
-#   nika run  flows/daily-brief.nika.yaml --model mock/echo   # zero-setup dry run
+#   nika check flows/daily-brief.nika            # static audit (offline)
+#   nika run  flows/daily-brief.nika             # real local run (Ollama)
+#   nika run  flows/daily-brief.nika --model mock/echo   # zero-setup dry run
 #
 # HN front page → top 8 stories → local-model brief → brief.md (+ tamper-evident trace)
 nika: local-ai-news-brief

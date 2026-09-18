@@ -30,7 +30,7 @@ Show
 Type "# the starter ships a working flow · audit it before any token is spent"
 Enter
 Sleep 700ms
-Type "nika check flows/daily-brief.nika.yaml"
+Type "nika check flows/daily-brief.nika"
 Enter
 Sleep 4200ms
 
@@ -39,7 +39,7 @@ Enter
 Type "# the same file, as the engine schedules it"
 Enter
 Sleep 700ms
-Type "nika inspect flows/daily-brief.nika.yaml"
+Type "nika inspect flows/daily-brief.nika"
 Enter
 Sleep 3800ms
 Sleep 1400ms

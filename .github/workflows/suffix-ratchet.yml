@@ -1,0 +1,17 @@
+# Issue #1684 · live program-suffix ratchet. Ordinary GitHub Actions YAML
+# (this file, nika.yml) is not a Nika program and is not renamed.
+name: suffix ratchet
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  ratchet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 scripts/suffix_ratchet.py
+      - run: python3 -m unittest scripts/test_suffix_ratchet.py -v

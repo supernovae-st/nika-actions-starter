@@ -1,10 +1,10 @@
 # AGENTS.md — Nika workflows in this repo
 
-Nika is a sovereign AI workflow engine. Workflows are `*.nika.yaml` files,
+Nika is a sovereign AI workflow engine. Workflows are `*.nika` files,
 **audited before they run**. (This guide is scaffolded by `nika init`.)
 
 ## The loop
-- **Author** · `nika new --from <template> <file>.nika.yaml` (or write one —
+- **Author** · `nika new --from <template> <file>.nika` (or write one —
   the envelope is `nika: <kebab-id>` + `tasks:`).
 - **Check** · `nika check <file>` — the static audit BEFORE any run (schema ·
   DAG · CEL · effects · permits · cost). Exit `0` clean · `2` findings.

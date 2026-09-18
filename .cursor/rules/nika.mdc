@@ -1,6 +1,6 @@
 ---
 description: Nika workflow language rules for AI assistance
-globs: ["**/*.nika.yaml", "**/*.nika.yml"]
+globs: ["**/*.nika"]
 alwaysApply: false
 ---
 
@@ -8,7 +8,7 @@ alwaysApply: false
 
 Envelope: `nika: <kebab-id>` (the mark AND the name). Never `nika: v1`
 and never a `workflow:` block (nine-key envelope · NIKA-PARSE-005).
-A description is a `#` comment ABOVE `nika:`. Extension: `.nika.yaml`.
+A description is a `#` comment ABOVE `nika:`. Extension: `.nika`.
 
 ## 4 Verbs (locked forever)
 - `infer:` LLM call (`prompt`, `system?`, `temperature?`, `schema?`)

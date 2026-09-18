@@ -23,8 +23,8 @@ jobs:
       fail-fast: false
       matrix:
         flow:
-          - flows/pr-risk-review.nika.yaml
-          - flows/daily-brief.nika.yaml
+          - flows/pr-risk-review.nika
+          - flows/daily-brief.nika
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: supernovae-st/nika-action@v1.0.20  # first-party · tracks the action's release tag by design
