@@ -1,11 +1,11 @@
 ---
 name: nika-authoring
-description: Author, check and repair Nika workflows (.nika.yaml files — the workflow language for AI). Use when writing or editing a *.nika.yaml file, converting a repeated AI task or prompt chain into a workflow, or when nika check reports NIKA-XXXX findings to fix.
+description: Author, check and repair Nika workflows (.nika files — the workflow language for AI). Use when writing or editing a *.nika file, converting a repeated AI task or prompt chain into a workflow, or when nika check reports NIKA-XXXX findings to fix.
 ---
 
 # Authoring Nika workflows
 
-Nika turns repeatable AI work into files: one `.nika.yaml`, four verbs,
+Nika turns repeatable AI work into files: one `.nika`, four verbs,
 audited **before** it runs. You author the file; `nika check` is the
 oracle; the human runs it.
 
@@ -13,7 +13,7 @@ oracle; the human runs it.
 
 1. **Start from a template or example**, never from scratch:
    `nika examples list` · `nika examples show <slug>` ·
-   `nika new --from <template> <file>.nika.yaml`
+   `nika new --from <template> <file>.nika`
 2. **Write the file.** Envelope is always `nika: <kebab-id>` +
    `tasks:` (nine keys, closed). Pick models and builtins from
    the embedded catalogs — `nika catalog` (providers · models ·

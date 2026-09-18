@@ -15,7 +15,7 @@ command -v nika >/dev/null || { echo "nika not on PATH" >&2; exit 1; }
 rm -rf /tmp/starter-demo
 mkdir -p /tmp/starter-demo
 cp -R "$ROOT/flows" /tmp/starter-demo/flows
-nika check /tmp/starter-demo/flows/daily-brief.nika.yaml >/dev/null || {
+nika check /tmp/starter-demo/flows/daily-brief.nika >/dev/null || {
   echo "the shipped flow must check clean before it is shown" >&2
   exit 1
 }

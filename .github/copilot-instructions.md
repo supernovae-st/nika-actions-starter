@@ -1,4 +1,4 @@
-# Nika workflows (`*.nika.yaml`) — Copilot brief
+# Nika workflows (`*.nika`) — Copilot brief
 
 Nika workflows are audited BEFORE they run. The loop: author from a
 skeleton (`nika new --from '?'` lists them) → `nika check <file>` after

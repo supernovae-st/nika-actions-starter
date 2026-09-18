@@ -1,11 +1,15 @@
 # AGENTS.md — Nika workflows in this repo
 
-Nika is a sovereign AI workflow engine. Workflows are `*.nika.yaml` files,
+Nika is a sovereign AI workflow engine. Workflows are `*.nika` files,
 **audited before they run**. (This guide is scaffolded by `nika init`.)
 
 ## The loop
-- **Author** · `nika new --from <template> <file>.nika.yaml` (or write one —
-  the envelope is `nika: <kebab-id>` + `tasks:`).
+- **Author** · `nika compile --list` names exact skeletons; preview with
+  `nika compile <skeleton> --json`; write only a Ready candidate to an
+  explicit destination (`nika compile hello hello.nika`). Remaining
+  questions use `--answer KEY=JSON_LITERAL`. `--force` replaces. Unknown
+  intent stays incomplete. Or write a file — the envelope is
+  `nika: <kebab-id>` + `tasks:`.
 - **Check** · `nika check <file>` — the static audit BEFORE any run (schema ·
   DAG · CEL · effects · permits · cost). Exit `0` clean · `2` findings.
 - **Run** · `nika run <file>` — execute · live render. Exit `0` ok · `1` failed.
@@ -43,11 +47,11 @@ or MCP tool) · `agent` (a multi-turn ReAct loop).
 - snake_case task ids · kebab-case `nika:` identity.
 
 ## Don't invent structure — route to a skeleton
-`nika new --from '?'` lists the embedded skeletons · `nika examples list` /
-`show <slug>` reads a runnable example that exercises a construct ·
-`nika schema` is the JSON Schema · `nika spec --canon` is the SSOT ·
-`nika catalog` names the providers/models · `nika tools` names the `nika:`
-builtins. Copy, fill, check.
+`nika compile --list` lists the embedded skeletons · `nika try` rehearses
+an example offline · `nika spec --schema` is the JSON Schema ·
+`nika spec --canon` is the SSOT · `nika catalog` names the
+providers/models · `nika catalog --tools` names the `nika:` builtins.
+Copy, fill, check.
 
 ## Cost honesty (never hide unknown spend)
 - `nika check` prints the ceiling BEFORE any token · `≥ $X FLOOR` means an
@@ -58,7 +62,7 @@ builtins. Copy, fill, check.
 
 ## Understand · replay · prove
 - `nika inspect <file>` — static anatomy: tasks · verbs · wave groups · cost.
-- `nika graph <file> --format mermaid|dot|json` — the ONE graph projector.
+- `nika inspect <file>` renders the dependency plan and permits boundary.
 - `nika trace show|replay <run>` — the flight recorder (every run records).
 - `nika trace verify <run>` — the journal is hash-chained: verify it after a
   run that matters, cite the trace instead of trusting a memory of the run.

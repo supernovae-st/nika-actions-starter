@@ -1,0 +1,24 @@
+{
+  "selftest": {
+    "inject_path": "scripts/test_suffix_ratchet.py",
+    "new_file": "scripts/_ratchet-injection.md"
+  },
+  "exceptions": [
+    {
+      "path": "scripts/suffix_ratchet.py",
+      "category": "ratchet",
+      "reason": "The scanner's own forbidden-pattern data.",
+      "owner": "nika-actions-starter",
+      "count": 37,
+      "lines_sha256": "sha256:3ca48a667b27c8faab36b4a24197520bc5fca6616c03740d5ef95fab15735452"
+    },
+    {
+      "path": "scripts/test_suffix_ratchet.py",
+      "category": "negative",
+      "reason": "Mutation fixture that must keep the retired spelling to prove detection.",
+      "owner": "nika-actions-starter",
+      "count": 18,
+      "lines_sha256": "sha256:7d905b01eab2511f5a473f93750f523019fbaa175d1e602e09f41d73a059f6df"
+    }
+  ]
+}
