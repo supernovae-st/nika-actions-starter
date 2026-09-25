@@ -1,8 +1,10 @@
 name: release-heal
 
 # New clones must start on the current wave (done by hand twice on
-# 2026-07-13). Daily: bump the template's engine-version default to the
-# latest published release. The healed byte lives INSIDE a workflow file,
+# 2026-07-13). Daily: move every release pin together through the tested
+# scripts/heal_pins.py: the reusable workflow's engine default, the engine
+# example in nika.yml, and both first-party nika-action pins (latest
+# published nika-action tag). The healed bytes live INSIDE workflow files,
 # which GITHUB_TOKEN can never push (GitHub App `workflows` wall — struck
 # live on the 0.103 wave): the push rides a deploy key instead, the same
 # no-clock pattern as the tap. SECURITY: no github.event data in the shell.
@@ -31,11 +33,12 @@ jobs:
           tag="$(gh release view --repo supernovae-st/nika --json tagName --jq .tagName)"
           [[ "$tag" =~ ^v[0-9][0-9.]*$ ]] || { echo "::error::unexpected tag: $tag"; exit 1; }
           ver="${tag#v}"
-          f=.github/workflows/nika-check.yml
-          cur="$(sed -n "s/.*default: '\([0-9][0-9.]*\)'.*/\1/p" $f | head -1)"
-          if [ "$cur" = "$ver" ]; then echo "default already $ver — nothing to heal"; exit 0; fi
-          perl -pi -e "s/default: '[0-9][0-9.]*'/default: '${ver}'/" $f
+          action="$(gh release view --repo supernovae-st/nika-action --json tagName --jq .tagName)"
+          [[ "$action" =~ ^v1\.[0-9]+\.[0-9]+$ ]] || { echo "::error::unexpected nika-action tag: $action"; exit 1; }
+          python3 scripts/heal_pins.py --engine "${ver}" --action "${action}"
+          if git diff --quiet; then echo "pins already ${ver} · ${action} — nothing to heal"; exit 0; fi
           git config user.name "nika-release[bot]"
           git config user.email "nika@supernovae.studio"
-          git add $f && git commit -m "chore: the starter installs ${ver} by default (release-heal)" && git push
-          echo "healed to ${ver}"
+          git add .github/workflows/nika-check.yml .github/workflows/nika.yml
+          git commit -m "chore: the starter follows nika ${ver} and nika-action ${action} (release-heal)" && git push
+          echo "healed to ${ver} · ${action}"
