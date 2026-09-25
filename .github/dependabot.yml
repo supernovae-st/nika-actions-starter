@@ -1,6 +1,7 @@
 # Keep this starter's own CI action pins fresh in one grouped weekly PR.
-# (The first-party nika-action stays on its @v1 tag by design and is not
-# bumped here — see the workflow comment.)
+# (The first-party nika-action is pinned to its exact release tag and is not
+# bumped here: release-heal.yml moves it with the engine pins through
+# scripts/heal_pins.py, so one owner moves them together.)
 #
 # Grouped on purpose: a split-pair action (codeql-action/init +
 # codeql-action/analyze must move in lockstep) landing as two separate
@@ -12,6 +13,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "supernovae-st/nika-action"
     groups:
       github-actions:
         patterns:

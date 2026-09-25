@@ -1,0 +1,20 @@
+# The starter's release pins move together: release-heal owns them through
+# scripts/heal_pins.py (engine default · engine example · both nika-action
+# pins). This gate refuses a hand edit that splits them and tests the heal's
+# updater. Template copies skip it: their pins are theirs to choose.
+name: pins
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  pins:
+    if: github.repository == 'supernovae-st/nika-actions-starter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 scripts/heal_pins.py --check
+      - run: python3 -m unittest scripts/test_heal_pins.py -v
