@@ -25,13 +25,14 @@
 </p>
 
 <!-- engine clips: served from the engine repository's main branch (media/), so they follow its latest render, not a release tag · each clip's plate names the engine version its output was captured from -->
+<p align="center"><b>Watch the check catch two mistakes in a workflow before anything runs, then pass the fixed file.</b></p>
 <p align="center">
-  <a href="https://github.com/supernovae-st/nika/raw/refs/heads/main/media/videos/static-check-fix.mp4">
+  <a href="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/static-check-fix.optimized.gif">
     <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/static-check-fix.optimized.gif"
-         alt="nika check finds two defects in a pull-request review workflow, the fix is applied, and the re-check comes back clean; nothing runs and no token is spent" width="760">
+         alt="nika check finds two defects in a pull-request review workflow, the fix is applied, and the re-check comes back clean; nothing runs and no token is spent" width="960">
   </a>
 </p>
-<p align="center"><sub><code>nika check</code> in a terminal: the audit your pull requests get as a comment. Click to open the video.</sub></p>
+<p align="center"><sub><code>nika check</code> in a terminal: the audit your pull requests get as a comment. Notice that each finding names its code and its fix, and the re-check ends in <code>run ready</code>. Output captured from the real CLI; nothing runs and no token is spent. Click to open it full size.</sub></p>
 
 ## What is Nika?
 
@@ -148,7 +149,16 @@ is only checked. A real run reads the diff with `git`, asks the model to rate
 the risk, and comments with `gh` only when the rating is high; the model's
 text reaches `gh pr comment --body` as one argument, never through a shell.
 
-<!-- motion: a pull request receiving the nika check sticky comment -->
+**Watch the comment on a pull request: one finding on the first push, the
+same comment clean after the fix.**
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/pr-check-comment.optimized.gif">
+    <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/pr-check-comment.optimized.gif"
+         alt="A pull request adds a pr-risk-review workflow; the nika-action comment names one finding, NIKA-DAG-002, and after the fixing push the same comment turns clean and draws the workflow's graph" width="860">
+  </a>
+</p>
+<p align="center"><sub>Notice the finding's hint (<code>NIKA-DAG-002</code>, "did you mean <code>assess</code>?"), then the same comment edited in place, clean, with the graph. Every word of both comments is nika-action's own renderer on real <code>nika check --json</code> and <code>nika inspect</code> output; the pull-request page is an illustration, and its workflow is the engine's fixture, a simpler cousin of this template's <code>pr-risk-review</code>. Click to open it full size.</sub></p>
 
 > [!WARNING]
 > Pull requests from forks get a read-only token, so their report stays on the
@@ -170,25 +180,22 @@ text reaches `gh pr comment --body` as one argument, never through a shell.
   </tr>
 </table>
 
-<table>
-  <tr>
-    <td align="center" valign="top" width="33%">
-      <a href="https://github.com/supernovae-st/nika/raw/refs/heads/main/media/videos/dag-execution.mp4"><img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/posters/dag-execution.png" alt="A pull-request review workflow drawn as a graph by nika inspect, beside the seven waves nika check plans for it" width="240"></a>
-      <br><b>A workflow is a graph</b>
-      <br><sub><code>nika inspect</code> draws it and <code>nika check</code> plans its waves: the graph in your comment.</sub>
-    </td>
-    <td align="center" valign="top" width="33%">
-      <a href="https://github.com/supernovae-st/nika/raw/refs/heads/main/media/videos/permits-audit.mp4"><img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/posters/permits-audit.png" alt="A workflow's declared permits drawn as a map; nika check catches the task that fetches a host outside them, and the widened boundary checks clean" width="240"></a>
-      <br><b>The file is the boundary</b>
-      <br><sub>The same catch as step 2 above: a fetch outside <code>permits:</code>, flagged before anything runs.</sub>
-    </td>
-    <td align="center" valign="top" width="33%">
-      <a href="https://github.com/supernovae-st/nika/raw/refs/heads/main/media/videos/editor-diagnostics.mp4"><img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/posters/editor-diagnostics.png" alt="An editor shows the findings the Nika language server publishes for a broken workflow; one keystroke fixes a typo, and the fixed file shows no problems" width="240"></a>
-      <br><b>Errors as you type</b>
-      <br><sub>The language server (<code>nika lsp</code>) shows the same findings in your editor.</sub>
-    </td>
-  </tr>
-</table>
+**The file is the boundary: watch the check flag a fetch outside
+`permits:`, the same catch as step 2 above.**
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/permits-audit.optimized.gif">
+    <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/permits-audit.optimized.gif"
+         alt="A workflow's declared permits drawn as a map; nika check catches the task that fetches a host outside them, and the widened boundary checks clean" width="860">
+  </a>
+</p>
+<p align="center"><sub>Notice the host the file never listed: the check names it and the fix before anything runs, and the widened boundary checks clean. Output captured from the real CLI; the map is drawn from the file's own <code>permits:</code>. Click to open it full size.</sub></p>
+
+▶ [Watch `nika inspect` draw a workflow as a graph and `nika check` plan its waves](https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/dag-execution.optimized.gif):
+the graph in your comment.
+
+▶ [Watch the language server flag errors as you type](https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/editor-diagnostics.optimized.gif):
+`nika lsp` shows the same findings in your editor.
 
 ## Where to edit
 
@@ -200,7 +207,7 @@ text reaches `gh pr comment --body` as one argument, never through a shell.
 | `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.cursor/`, `.github/copilot-instructions.md` | guides for coding agents, scaffolded by `nika init` | keep the ones your tools read |
 | [`.vscode/`](.vscode) | the schema mapping for `*.nika` and a recommended extension | keep |
 | `.github/workflows/release-heal.yml`, `pins.yml`, `suffix-ratchet.yml` and `scripts/` | upkeep of this template itself | delete them in your copy |
-| [`media/`](media) | the terminal clip on this page | delete it if you like |
+| [`media/`](media) | the terminal clip linked from this page | delete it if you like |
 
 > [!TIP]
 > Newer engines scaffold newer agent guides. `nika init` skips files that
@@ -218,9 +225,8 @@ nika inspect flows/pr-risk-review.nika                # its steps, waves and bou
 nika run flows/daily-brief.nika --model mock/echo     # stand-in model: no key, no model server
 ```
 
-<p align="center">
-  <img src="media/check-and-inspect.gif" alt="nika check returns a clean verdict on this template's daily-brief workflow, then nika inspect draws its four steps in the terminal" width="760">
-</p>
+▶ [Watch `nika check` pass this template's daily brief, then `nika inspect` draw its four steps](media/check-and-inspect.gif),
+recorded in a terminal.
 
 The `mock/echo` run is a rehearsal: the model only echoes its prompt, but the
 feed is really fetched, so it needs a network connection. For a real brief,
@@ -248,12 +254,15 @@ List `flows/hello.nika` under `matrix.flow` in `.github/workflows/nika.yml`,
 push a branch and open a pull request: the new workflow gets a comment of its
 own.
 
+**Watch the four commands above on the real CLI, offline.**
+
 <p align="center">
-  <a href="https://github.com/supernovae-st/nika/raw/refs/heads/main/media/videos/full-loop.mp4">
+  <a href="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/full-loop.optimized.gif">
     <img src="https://raw.githubusercontent.com/supernovae-st/nika/main/media/gifs/full-loop.optimized.gif"
-         alt="The first four commands on the real CLI: nika compile writes hello.nika, nika check passes it, nika run rehearses it offline with mock/echo, and nika trace verify reads back the chain head the run printed" width="760">
+         alt="The first four commands on the real CLI: nika compile writes hello.nika, nika check passes it, nika run rehearses it offline with mock/echo, and nika trace verify reads back the chain head the run printed" width="860">
   </a>
 </p>
+<p align="center"><sub>Notice the chain head: <code>nika trace verify</code> reads back the same 64 hex digits the run printed. All four commands are captured from the real CLI; the run is a <code>mock/echo</code> rehearsal. Click to open it full size.</sub></p>
 
 ## Good to know
 
