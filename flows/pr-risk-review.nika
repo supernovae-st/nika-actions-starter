@@ -35,11 +35,10 @@ tasks:
   diff:
     exec:
       command: ["git", "diff", "origin/main...HEAD"]
-      capture: structured
 
   assess:
     with:
-      patch: ${{ tasks.diff.output.stdout }}
+      patch: ${{ tasks.diff.output }}
     infer:
       prompt: |
         Risk-assess this diff for secrets, breaking changes and missing

@@ -19,7 +19,7 @@ const:
   feed_url: "https://news.ycombinator.com/rss"
   out_path: "./brief.md"
 
-# The blast radius, declared in the file. This flow may reach exactly two
+# The blast radius, declared in the file. This flow may reach exactly three
 # tools, fetch one host and write one path. Anything else is refused before
 # a request leaves your machine, not after.
 permits:

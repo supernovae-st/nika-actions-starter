@@ -110,7 +110,7 @@ For each workflow listed in `.github/workflows/nika.yml`, the job:
 4. fails when there are findings, so you can make it a required check.
 
 Here is the comment `flows/pr-risk-review.nika` gets, produced by running
-the action's own scripts against the released engine 0.121.0. Real ones, from
+the action's own scripts against the released engine 0.123.0. Real ones, from
 an older engine, are on
 [pull request #14](https://github.com/supernovae-st/nika-actions-starter/pull/14).
 
@@ -139,7 +139,7 @@ an older engine, are on
 >
 > </details>
 > ---
-> <sub>nika 0.121.0 · report_version 1 · floor semantics: spend ≥ floor · [what this checks](https://docs.nika.sh/reference/machine-surfaces)</sub>
+> <sub>nika 0.123.0 · report_version 1 · floor semantics: spend ≥ floor · [what this checks](https://docs.nika.sh/reference/machine-surfaces)</sub>
 > <!-- nika-action:v1:flows/pr-risk-review.nika -->
 
 Read it top to bottom: the file is clean; its one model step runs on a local
@@ -205,7 +205,7 @@ the graph in your comment.
 | [`.github/workflows/nika.yml`](.github/workflows/nika.yml) | the check: which files, which engine and action versions | list each new workflow under `matrix.flow` |
 | [`.github/workflows/nika-check.yml`](.github/workflows/nika-check.yml) | the check as a reusable workflow, for other repositories | keep it if others call it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.cursor/`, `.github/copilot-instructions.md` | guides for coding agents, scaffolded by `nika init` | keep the ones your tools read |
-| [`.vscode/`](.vscode) | the schema mapping for `*.nika` and a recommended extension | keep |
+| [`.vscode/`](.vscode) | the schema mapping for `*.nika`, and the YAML extension that applies it | keep; the Nika editor extension (`supernovae.nika`) stays at 0.120 and was not qualified with 0.123 |
 | `.github/workflows/release-heal.yml`, `pins.yml`, `suffix-ratchet.yml` and `scripts/` | upkeep of this template itself | delete them in your copy |
 | [`media/`](media) | the terminal clip linked from this page | delete it if you like |
 
@@ -226,7 +226,7 @@ nika run flows/daily-brief.nika --model mock/echo     # stand-in model: no key, 
 ```
 
 ▶ [Watch `nika check` pass this template's daily brief, then `nika inspect` draw its four steps](media/check-and-inspect.gif),
-recorded in a terminal.
+recorded in a terminal with Nika 0.123.0.
 
 The `mock/echo` run is a rehearsal: the model only echoes its prompt, but the
 feed is really fetched, so it needs a network connection. For a real brief,
@@ -308,7 +308,7 @@ deleting it.
 | 🦋 | [nika](https://github.com/supernovae-st/nika) | The engine and CLI: write, check, run and verify AI workflows |
 | 📖 | [nika-docs](https://github.com/supernovae-st/nika-docs) | The documentation, live at [docs.nika.sh](https://docs.nika.sh) |
 | 📜 | [nika-spec](https://github.com/supernovae-st/nika-spec) | The language specification and the suite that proves an engine follows it |
-| 🧩 | [nika-vscode](https://github.com/supernovae-st/nika-vscode) | The editor extension: your workflow as a live graph, errors as you type |
+| 🧩 | [nika-vscode](https://github.com/supernovae-st/nika-vscode) | The editor extension, frozen at 0.120 and not qualified with 0.123: use `nika lsp` and the JSON Schema |
 | 🟦 | [nika-client](https://github.com/supernovae-st/nika-client) | Run and verify workflows from TypeScript |
 | ✅ | [nika-action](https://github.com/supernovae-st/nika-action) | A GitHub Action that posts a `nika check` verdict on your pull requests |
 | 🚀 | **[nika-actions-starter](https://github.com/supernovae-st/nika-actions-starter)** | **A ready template: workflows, editor setup and CI from the first push** |

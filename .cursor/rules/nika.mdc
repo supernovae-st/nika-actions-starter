@@ -6,21 +6,30 @@ alwaysApply: false
 
 # Nika Workflow Language
 
-Envelope: `nika: <kebab-id>` (the mark AND the name). Never `nika: v1`
-and never a `workflow:` block (nine-key envelope · NIKA-PARSE-005).
-A description is a `#` comment ABOVE `nika:`. Extension: `.nika`.
+Envelope: nine keys — `nika` · `model` · `inputs` · `const` · `secrets` · `permits` · `run` · `tasks` · `outputs`. Anything else refuses `NIKA-PARSE-005`. Canonical program files use the `.nika` suffix. Project file remains `nika.yaml`; runtime state remains `.nika/`. A schedule is an `arm:` beat in `nika.yaml` (the zone inside the cadence, `plafond:`, `manqué:`), never a key of a `.nika` file (`NIKA-PARSE-005`), a cron line or a CI schedule; `nika arm --json` reads it and fires nothing (https://docs.nika.sh/guides/projects-and-schedules).
+
+## Shape
+- `nika:` is a scalar string — the file's kebab-case NAME. That one key carries both the mark and the name; there is no `workflow:` envelope key (it refuses `NIKA-PARSE-005`, as do `types:` · `policy:` · `config:` · `assert:`). `workflow:` survives only INSIDE `invoke:`, to call a child workflow.
+- `tasks:` is a MAP keyed by task id — the key IS the identity, never a `- id:` sequence (`NIKA-PARSE-022`).
 
 ## 4 Verbs (locked forever)
-- `infer:` LLM call (`prompt`, `system?`, `temperature?`, `schema?`)
-- `exec:` subprocess (`command`, `cwd?`, `capture: text|structured`)
+- `infer:` LLM call (`prompt`, `system?`, `temperature?`, `schema?`, `max_tokens?`, `model?`)
+- `exec:` subprocess (`command:` is argv — `["git", "status", "--short"]`, one token per element, run via execve so an interpolated value can never break out · no implicit shell: pipes, redirects and globs go in `shell:` explicitly · `cwd?` · `capture: stdout|stderr|combined|structured`)
 - `invoke:` builtin/MCP tool (`tool`, `args`) — HTTP fetch = `tool: nika:fetch` (a tool, not a verb)
 - `agent:` multi-turn loop (`prompt`, `tools`, `max_turns`, `max_tokens_total`)
 
+## The 3 value authorities (the family is closed)
+- `inputs:` typed parameters a caller supplies (`--var key=value` at run time — a DEPLOYMENT-supplied value is one of these too: `required: false` with a `default:`) · `const:` fixed values baked into the file · `secrets:` governed store references. The value authorities are exactly three.
+- Any other namespace refuses `NIKA-VALUES-003`. `config:` is NOT among them — since the 9-key envelope it is not a field at all, so it refuses `NIKA-PARSE-005` (measured), with no dedicated migration teaching. `vars:` and `env:` are dead envelope fields (`NIKA-VALUES-001` · `NIKA-VALUES-002`) — classify each entry by the role it plays; `nika check --fix` migrates the `vars:` half, `env:` is a human classification.
+
 ## Authoring Discipline
-- Interpolation uses `${{ inputs.x }}` · `${{ const.x }}` · `${{ secrets.x }}` · `${{ tasks.id.output }}` · `${{ with.alias }}`.
-- Bindings use `with: { alias: ${{ tasks.id.output }} }` then `${{ with.alias }}`.
-- Models use the combined form `provider/name` (for example `mock/echo`, `ollama/qwen3.5:4b`, `mistral/mistral-small`).
-- The binding IS the edge. Pure ordering is `after: { task_id: success }`. `depends_on` is dead.
-- Secrets come from the environment — never inline literal keys.
-- After every edit, run `nika check <file>` and repair from diagnostics.
+- Interpolation uses `${{ inputs.x }}` · `${{ const.x }}` · `${{ secrets.X }}` · `${{ tasks.id.output }}` · `${{ with.alias }}`.
+- Bindings use `with: { alias: "${{ tasks.id.output }}" }` then `${{ with.alias }}` — inside a FLOW mapping the value is quoted, or YAML reads `{{` as a nested map (`NIKA-PARSE-001`); in block style, `alias: ${{ tasks.id.output }}` on its own line under `with:`, a bare reference is fine.
+- `permits:` IS the boundary, and ABSENT MEANS ZERO AUTHORITY: any effect without a grant refuses `NIKA-AUTH-006` at check, before a token is spent. A pure-compute body states the zero explicitly as `permits: {}`. `nika check --infer-permits` prints the tightest block. Every permit bound is a literal, never an interpolation (`NIKA-AUTH-007`), and `*.example.com` is refused — name exact hosts (`NIKA-AUTH-010`).
+- A spawned child inherits NOTHING from the engine: its environment is composed from a cleared slate — the runner floor ∪ the names in `permits: { env: [NAME] }` ∪ the task's own `env:` map. A variable the child needs must be named.
+- Models use the combined form `provider/name` (for example `mock/echo`, `ollama/qwen3.5:4b`, `mistral/mistral-small-latest`).
+- Edges are declared, never restated: a `with:` binding reading `${{ tasks.id.output }}` IS the data edge · `after: { task_id: success }` is the control edge (predicates: `success` · `failure` · `skipped` · `terminal` · `unwind`, the last being best-effort cleanup for a producer that started; it does not run for an unstarted producer and process death can prevent it, replacing the dead `on_finally:`). `depends_on` is dead — `nika check --fix` migrates it.
+- Secrets are declared in a top-level `secrets:` block (e.g. `source: env`, `key: MY_KEY`) with its `egress:` sinks, and referenced as `${{ secrets.name }}` — never inline literal keys; non-sensitive configuration is an `inputs:` declaration with `required: false` and a `default:`, read as `${{ inputs.KEY }}`.
+- After every edit, run `nika check <file>` — `--fix` heals the mechanical
+  renames, the diagnostics teach the rest.
 - Unknown code? Run `nika explain NIKA-XXXX`.
