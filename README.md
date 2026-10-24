@@ -110,7 +110,7 @@ For each workflow listed in `.github/workflows/nika.yml`, the job:
 4. fails when there are findings, so you can make it a required check.
 
 Here is the comment `flows/pr-risk-review.nika` gets, produced by running
-the action's own scripts against the released engine 0.121.0. Real ones, from
+the action's own scripts against the released engine 0.123.0. Real ones, from
 an older engine, are on
 [pull request #14](https://github.com/supernovae-st/nika-actions-starter/pull/14).
 
@@ -139,7 +139,7 @@ an older engine, are on
 >
 > </details>
 > ---
-> <sub>nika 0.121.0 · report_version 1 · floor semantics: spend ≥ floor · [what this checks](https://docs.nika.sh/reference/machine-surfaces)</sub>
+> <sub>nika 0.123.0 · report_version 1 · floor semantics: spend ≥ floor · [what this checks](https://docs.nika.sh/reference/machine-surfaces)</sub>
 > <!-- nika-action:v1:flows/pr-risk-review.nika -->
 
 Read it top to bottom: the file is clean; its one model step runs on a local
