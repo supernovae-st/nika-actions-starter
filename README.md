@@ -205,7 +205,7 @@ the graph in your comment.
 | [`.github/workflows/nika.yml`](.github/workflows/nika.yml) | the check: which files, which engine and action versions | list each new workflow under `matrix.flow` |
 | [`.github/workflows/nika-check.yml`](.github/workflows/nika-check.yml) | the check as a reusable workflow, for other repositories | keep it if others call it |
 | `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.cursor/`, `.github/copilot-instructions.md` | guides for coding agents, scaffolded by `nika init` | keep the ones your tools read |
-| [`.vscode/`](.vscode) | the schema mapping for `*.nika` and a recommended extension | keep |
+| [`.vscode/`](.vscode) | the schema mapping for `*.nika`, and the YAML extension that applies it | keep; the Nika editor extension (`supernovae.nika`) stays at 0.120 and was not qualified with 0.123 |
 | `.github/workflows/release-heal.yml`, `pins.yml`, `suffix-ratchet.yml` and `scripts/` | upkeep of this template itself | delete them in your copy |
 | [`media/`](media) | the terminal clip linked from this page | delete it if you like |
 
