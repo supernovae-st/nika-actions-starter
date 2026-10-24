@@ -1,139 +1,82 @@
 ---
 name: nika-authoring
-description: Author, check and repair Nika workflows (.nika files — the workflow language for AI). Use when writing or editing a *.nika file, converting a repeated AI task or prompt chain into a workflow, or when nika check reports NIKA-XXXX findings to fix.
+description: Author, check and repair Nika projects (.nika workflows, the nika.yaml project file and its beats, supporting files, child workflows) and static NIKA findings. Use migration for existing automation ports and debugging for run failures.
 ---
 
 # Authoring Nika workflows
 
-Nika turns repeatable AI work into files: one `.nika`, four verbs,
-audited **before** it runs. You author the file; `nika check` is the
-oracle; the human runs it.
+Deliver a workflow that expresses the requested inputs, outputs and effects,
+with a clean check of the exact final file. Continue through diagnosis and
+repair within the user's scope; include execution and artifact inspection when
+requested and authorized. If blocked, return the artifact and concrete finding,
+not a claim of readiness. These instructions apply across models and clients;
+installed engine capabilities and host tools determine what is available.
 
-## The loop (always)
+## Start from the task
 
-1. **Start from a template or example**, never from scratch:
-   `nika examples list` · `nika examples show <slug>` ·
-   `nika new --from <template> <file>.nika`
-2. **Write the file.** Envelope is always `nika: <kebab-id>` +
-   `tasks:` (nine keys, closed). Pick models and builtins from
-   the embedded catalogs — `nika catalog` (providers · models ·
-   capabilities · which env var each needs) and `nika catalog --tools` (the
-   `nika:*` builtins an `invoke` reaches without MCP); before a run,
-   `nika inspect <file>` shows the anatomy: tasks · waves · the cost
-   floor.
-3. **Check it**: `nika check <file>` (exit 0 = clean · 2 = findings),
-   then `nika check --native-strict <file>` — it fails on any
-   `native-first` hint (an `exec:` a builtin covers).
-4. **Repair**: `nika check <file> --fix` applies the machine-applicable
-   renames first (typo'd fields · tools · args · `after:` targets ·
-   `${{ }}` references — typed did-you-mean only, ambiguity is skipped
-   with a note, never guessed) and re-audits; repair what remains from
-   the diagnostics — they name the exact task, reference and fix.
-   Unknown code? `nika explain NIKA-XXXX`.
-5. Repeat 3–4 until clean. **Never hand a file to the human that does
-   not pass `nika check`** — and pass `--native-strict` too, unless
-   every remaining `exec:` is in the exec ledger (below).
-6. The human (or CI) runs it: `nika run <file>`. Preview offline with
-   `--model mock/echo`; run locally with `--model ollama/<model>` —
-   or fully in-binary: `nika model pull <owner/repo-GGUF>` then
-   `nika model serve --model <id>` (qwen3-family GGUFs today; the
-   serve banner prints the exact env + `model:` line workflows use).
-   Inputs ride `--var key=value` (repeatable · unknown keys refused);
-   a run paused on a `nika:prompt` resumes with
-   `nika run <file> --resume <trace> --answer <task>=<value>`
-   (confirm gates take booleans: `--answer approve=true`).
-7. Pin it for CI: `nika test <file> --update` writes
-   `<file>.golden.json` from an offline mock run; `nika test <file>`
-   replays and compares — deterministic, zero keys.
-8. **Prove a run that mattered**: every run writes a hash-chained
-   journal to `.nika/traces/` — `nika trace verify <trace>` checks the
-   chain (tamper-evidence), `nika trace show <trace>` reads the card.
-   Cite the trace, never a memory of the run.
+The unit of work is the project: its workflows, the optional `nika.yaml`
+(name, ceiling, beats, trace and registry policy), the files the workflows
+read and the child workflows they call. Check every file you touch, from the
+project root ([Project](references/project.md)).
 
-## Cost honesty (never hide unknown spend)
+For a small edit, inspect the named file and affected dependencies. For a new
+job, `nika list` lists candidates; it does not certify them. Use
+`nika explain <candidate>` to understand an existing owner before creating a
+replacement. `nika try` and `nika compile --list` expose examples and templates when
+an unfamiliar structure needs one. Read the relevant example, not a fixed quota.
+Use `nika --version` and the installed schema/catalog for exact names; preserve
+the user's model and do not invent an identifier from a marketing name.
 
-- `nika check` prints the cost ceiling BEFORE any token: `≤ $X` is a
-  ceiling · `≥ $X FLOOR` means at least one task is unbounded — name
-  the reason (a missing `max_tokens`, an uncataloged model, an
-  expression fan-out), never round it to $0.
-- A local model (`ollama/…`) is **unpriced compute, not « free »** —
-  say "unpriced", never "$0" or "free".
-- A spend cap rides the run: `nika run <file> --max-cost-usd <n>`
-  blocks BEFORE the call that would cross the cap.
-- `nika explain <file>` narrates all of this (waves · cost · touches ·
-  how to run) — use it before handing a workflow to a human.
+Use what the person already gave, what the project keeps and what they
+delegated to you. Ask, in one question, only for the facts still missing that
+change the result or an effect
+([Decisions and effects](references/decisions-and-effects.md)). One scoped
+instruction covers each effect it names (saving, running, activating a beat)
+once: carry it out without asking again.
 
-## The four verbs (exactly one per task)
+## Read the reference that resolves the uncertainty
 
-- `infer:` — an LLM call (`prompt`, `schema?` for typed output,
-  `max_tokens?`)
-- `exec:` — a shell command (`command`, `capture: text|structured`) ·
-  **last resort**: run the native-first interrogation first (below)
-- `invoke:` — a builtin or MCP tool (`tool`, `args`) · HTTP fetch is
-  `tool: "nika:fetch"`, a tool, not a verb
-- `agent:` — a bounded multi-turn loop (`prompt`, `tools` allowlist,
-  `max_turns`, `max_tokens_total`)
+| Task | Reference |
+|---|---|
+| Find a local owner or example for a new graph | [Workspace and examples](references/workspace-and-examples.md) |
+| Envelope, values, modifiers, verbs, permits or CEL syntax | [Language](references/language.md) |
+| Check findings, execution, rehearsal, traces or cost reporting | [Validation and execution](references/validation-and-execution.md) |
+| Choose native tools, retain an exec, build JSON or prove deterministic rules | [Native tools and artifacts](references/native-and-artifacts.md) |
+| Paid inference, extraction schemas or paid-readiness blockers | [Paid inference](references/paid-inference.md) |
+| Parent/child calls, containment, child outputs or budgets | [Composition](references/composition.md) |
+| A project: `nika.yaml`, beats and their zone, supporting files, children, path bases | [Project](references/project.md) |
+| An open value, a human gate, exact identifiers, readback, a refused write, a model step a hint questions | [Decisions and effects](references/decisions-and-effects.md) |
 
-## Native-first (the law)
+Consult only the needed references. When loaded as a Nika runtime skill, linked
+files are not automatically injected: the host must supply an authorized read
+tool and read grants, or explicitly supply the required files as context.
 
-The order is `invoke: nika:*` → `invoke: mcp:<server>/<tool>` →
-`exec:`. Before writing ANY `exec:`, answer in your head:
+## Shared contract
 
-1. **Which builtin replaces it?** `nika catalog --tools --json` is the catalog.
-   HTTP (curl/wget/helper fetch) → `nika:fetch` · uploads →
-   `multipart:` · site crawls → `traverse:` · file plumbing
-   (cat/tee/cp/mkdir) → `nika:read`/`nika:write` (`create_dirs: true`) ·
-   JSON shaping (jq/sed) → `nika:jq` (or an `output:` binding) ·
-   in-place edits → `nika:edit` · image/speech provider calls →
-   `nika:image_generate`/`nika:tts_generate` · image styling
-   (ImageMagick convert / PIL filters / dither scripts) →
-   `nika:image_fx` (deterministic — same input+args = same bytes,
-   the artifact sha256 joins the trace chain).
-2. **Which MCP tool replaces it?** A product API deserves an MCP
-   server, never a helper script.
-3. **Neither?** Name the exact gap — then `exec:` is legitimate
-   (build tools · git · a product CLI with no MCP surface yet) and
-   goes in the ledger.
+- Envelope: `nika: <id>` and a `tasks:` map, exactly one of `infer`, `exec`,
+  `invoke`, `agent` per task. Use `nika spec --schema` and `nika catalog --tools`.
+- Values belong in `inputs:`, `const:`, `secrets:`. Bind task data with `with:`;
+  `after:` orders without data. Secrets use declared stores and `egress:` sinks.
+- `permits:` bounds intended effects. Missing grants mean zero authority
+  (`NIKA-AUTH-006`); pure compute declares `permits: {}`. Review
+  `nika check <file> --infer-permits` proposals against the requested scope.
+  Do not widen grants merely to silence findings. For `lift:` (`law: taint` or
+  `law: data-as-code`), read the language reference; a lift grants no permit.
+- `nika check <file> --json --native-strict` validates the final candidate.
+  Inspect the exit status, `clean`, `native_strict_clean`, composition coverage
+  and, before paid inference, `paid_ready`. `--fix` applies mechanical repairs;
+  review its diff. `nika explain NIKA-XXXX` teaches an unresolved finding.
+- A check is evidence, not permission or proof of effects. Preserve existing
+  authorization, caps and human gates. `mock/echo` simulates envelope inference;
+  task model pins, tools, writes and network effects remain real.
+- The estimate covers output tokens; unknown input billing or local compute
+  remains unpriced. Metered caps can overshoot for already admitted calls.
 
-Never write a helper script (`node bin/helper.mjs …`) that wraps
-HTTP/files/JSON — that is `native-first/005`, the exact failure class
-this law exists for.
+## Finish at the requested outcome
 
-## Exec ledger (mandatory when any exec remains)
-
-Every surviving `exec:` gets a row in the workflow's header comment:
-
-```
-# EXEC LEDGER ·
-# | task | command | why no native path | unlock that removes it |
-```
-
-`--native-strict` + a complete ledger = a reviewable workflow.
-
-## Discipline
-
-- References: `${{ tasks.<id>.output }}` · `${{ const.x }}` (a fixed
-  value) · `${{ inputs.x }}` (a typed parameter, set with `--var
-  key=value`) · `${{ env.KEY }}` · `${{ secrets.X }}` (never inline a
-  credential). `vars:` is a DEAD envelope field: the engine refuses it
-  with NIKA-VALUES-001 and `nika check --fix` migrates it.
-- In `outputs:` bind `${{ tasks.<id>.output }}` — never the bare
-  `${{ tasks.<id> }}`: that binds the ENVELOPE (status + timestamps),
-  so `nika test` goldens drift red on every run. `nika check` teaches
-  this as `[envelope-output]`; fix the binding, never re-baseline
-  around it.
-- A task that reads another task's output binds it in `with:` —
-  `with: { alias: "${{ tasks.<id>.output }}" }` — and the body reads
-  `${{ with.alias }}` (the binding IS the edge; `tasks.*` anywhere
-  else is NIKA-VAR-021). Pure ordering is `after: { <id>: succeeded }`.
-- Models are `provider/name` (`ollama/llama3.2:3b` local-first ·
-  `mock/echo` offline preview).
-- Timeouts are quoted Go-durations (`timeout: "7m"`) — give local
-  providers ≥300s: thinking models routinely think past 30s.
-- Declare the blast radius: `nika check --infer-permits <file>` prints
-  the tightest `permits:` block — paste it in (default-deny from then on).
-- Structured output: give `infer:` a `schema:`; add
-  `additionalProperties: false` for a deterministic shape.
-- Auth rides `headers: { x-api-key: "${{ secrets.KEY }}" }` (masked ·
-  declared in `secrets:` with its `egress:` sink) — never `exec: curl`
-  for the sake of a header.
+For authoring, report the file, actual check verdict, effect scope and remaining
+blockers. For an authorized run, retain its session and exact trace, read
+back what it wrote or created and inspect that against the task's expected
+result, and report the exit status and verified evidence tier. Reconcile partial effects before any retry. A golden
+is suitable only for the simulated plane that supports the workflow; a green
+static check alone proves neither behavior nor parity.
