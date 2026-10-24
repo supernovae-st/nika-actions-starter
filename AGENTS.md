@@ -13,7 +13,7 @@ a clean checker result does not supply authorization or prove effects.
 
 For authoring details, open the project-local
 [authoring skill](.agents/skills/nika-authoring/SKILL.md), then only the reference
-needed for the task. `nika init` ships that entry and its six linked guides;
+needed for the task. `nika init` ships that entry and its eight linked guides;
 clients that do not discover `.agents/skills` can follow this link directly.
 Check `nika --version` and use the installed schema/catalog for supported names.
 An installed marketplace plugin and this project's scaffold can be from different
