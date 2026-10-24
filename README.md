@@ -226,7 +226,7 @@ nika run flows/daily-brief.nika --model mock/echo     # stand-in model: no key, 
 ```
 
 ▶ [Watch `nika check` pass this template's daily brief, then `nika inspect` draw its four steps](media/check-and-inspect.gif),
-recorded in a terminal.
+recorded in a terminal with Nika 0.123.0.
 
 The `mock/echo` run is a rehearsal: the model only echoes its prompt, but the
 feed is really fetched, so it needs a network connection. For a real brief,
