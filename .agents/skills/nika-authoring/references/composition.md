@@ -36,11 +36,13 @@ engine's normal admission; a compose result cannot grant or bypass it.
 
 **Four laws, all judged at check.**
 
-- **STATIC target.** A literal path or a pinned
-  `registry:owner/name@version`. A `${{ }}`-templated target refuses
-  `NIKA-COMP-001`: a call graph you cannot draw before the run is a
-  call graph you cannot bound. A relative path resolves from the PARENT
-  FILE's directory, not the shell's cwd.
+- **STATIC target.** A literal path. A `registry:` coordinate is refused
+  by 0.123.0 (`NIKA-COMP-001`): fetch the file with
+  [nika-registry](https://github.com/supernovae-st/nika-registry)'s
+  `scripts/get.py` and invoke it by path. A `${{ }}`-templated target
+  refuses `NIKA-COMP-001` too: a call graph you cannot draw before the
+  run is a call graph you cannot bound. A relative path resolves from the
+  PARENT FILE's directory, not the shell's cwd.
 - **The child is READ at check time.** A path that does not resolve is
   `NIKA-COMP-001` too, so a parent cannot pass check without its
   children present on disk.
